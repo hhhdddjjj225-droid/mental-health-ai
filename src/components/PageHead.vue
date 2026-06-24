@@ -1,4 +1,5 @@
 <template>
+  <!-- 页面头组件 -->
   <div class="page-head">
     <p class="page-title">{{ props.title }}</p>
     <div class="actoin-btn">
@@ -8,6 +9,7 @@
 </template>
 
 <script setup lang="ts" name="ComponentName">
+//接收父组件传递的title属性
 const props = defineProps({
   title: {
     type: String,

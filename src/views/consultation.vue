@@ -175,6 +175,7 @@
       <!-- 消息输入 -->
       <div class="chat-input">
         <div class="input-container">
+          <!-- 输入框 -->
           <el-input v-model="userMessage" placeholder="请输入消息..." type="textarea" :rows="3" :disabled="isAiTying"
             @keydown="handleKeyDown" class="message-input" clearable />
           <div class="input-footer">
@@ -201,7 +202,7 @@ import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
 
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 
-
+//定义图标地址
 const iconUrl = new URL('@/assets/images/robot-fill.png', import.meta.url).toString()
 const iconUrl1 = new URL('@/assets/images/like.png', import.meta.url).toString()
 const iconUrl2 = new URL('@/assets/images/users.png', import.meta.url).toString()
@@ -287,7 +288,7 @@ const sendMessage = () => {
     ElMessage.error('AI正在输入，请稍后再发送')
     return
   }
-
+  //先接收再清空输入框
   const message = userMessage.value.trim()
   userMessage.value = ''
 
@@ -312,9 +313,11 @@ const startNewSession = (message) => {
   const sessionParams = {
     initialMessage: message,
   }
+  //设置会话标题
   if (currentSession.value.sessionTitle === '新会话') {
     sessionParams.sessionTitle = `Roger-AI助手-${new Date().toLocaleString()}`
   } else {
+    //否则 保持当前会话标题
     sessionParams.sessionTitle = currentSession.value.sessionTitle
   }
   //调用后端接口创建新会话

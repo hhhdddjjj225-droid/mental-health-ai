@@ -1,4 +1,5 @@
 <template>
+  <!-- 咨询记录 -->
   <div>
     <PageHead title="咨询记录" />
     <el-table :data="tableData" style="width: 100%">
@@ -23,6 +24,7 @@
     </el-table>
     <el-pagination style="margin-top: 25px" :page-size="pagination.size" layout="prev, pager, next"
       :total="pagination.total" @change="handleChange" />
+    <!-- 弹窗咨询会话详情 -->
     <el-dialog v-model="showDetailDialog" title="咨询会话详情" width="70%" :close-on-click-modal="false">
       <div class="session-detail">
         <div class="detail-header">
@@ -67,20 +69,26 @@ import { ref, onMounted, reactive } from 'vue'
 import PageHead from '@/components/PageHead.vue'
 import { getConsultationsPage, getSessionDetail } from '@/api/admin'
 
+//咨询记录列表
 const tableData = ref([])
-
+//分页参数
 const pagination = reactive({
   total: 0,
   pageSize: 10,
   currentPage: 1
 })
-
+//会话详情
 const sessionDetail = ref({})
+//会话消息列表
 const sessionMessages = ref([])
+//加载中
 const loadingMessages = ref(false)
+//查看会话详情
 const viewSessionDetail = (row) => {
   loadingMessages.value = true
   showDetailDialog.value = true
+  //获取会话详情
+  //获取会话消息列表
   getSessionDetail(row.id).then(res => {
     loadingMessages.value = false
     sessionDetail.value = row
@@ -88,11 +96,12 @@ const viewSessionDetail = (row) => {
   })
 
 }
+//打开详情弹窗
 const handleChange = (page) => {
   pagination.currentPage = page
   handleSearch()
 }
-
+//搜索
 const handleSearch = () => {
   getConsultationsPage(pagination).then(res => {
     const { records, total } = res
@@ -101,7 +110,7 @@ const handleSearch = () => {
   })
 }
 
-//详情
+//详情展开
 const showDetailDialog = ref(false)
 onMounted(() => {
   handleSearch()

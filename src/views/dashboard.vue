@@ -1,5 +1,7 @@
 <template>
+  <!-- 系统总览大看板 -->
   <div class="dashboard-container">
+    <!-- 系统总览卡片区域 -->
     <el-row :gutter="20">
       <el-col :span="6">
         <el-card v-if="aiData.systemOverview">
@@ -58,6 +60,7 @@
         </el-card>
       </el-col>
     </el-row>
+    <!-- 图图表区域 -->
     <el-row style="margin-top: 20px;" :gutter="20">
       <el-col :span="12">
         <el-card style="width: 100%;">
@@ -119,33 +122,36 @@ import { onMounted, ref } from 'vue'
 import * as echarts from 'echarts'
 
 
-//图片引入
+//统计图片引入
 const iconUrl1 = new URL('@/assets/images/users.png', import.meta.url).href
 const iconUrl2 = new URL('@/assets/images/like.png', import.meta.url).href
 const iconUrl3 = new URL('@/assets/images/comments.png', import.meta.url).href
 const iconUrl4 = new URL('@/assets/images/smile.png', import.meta.url).href
-
+//系统总览数据
 const aiData = ref({})
 
 //情绪趋势
 let emotionChart = null
+//情绪趋势图表引用
 const emotionChartRef = ref(null)
-//初始化图表
+//初始化图表方法
 const initChart = () => {
   initEmotionChart()
   initConsultationChart()
   initUserActivityChart()
 }
-
+//初始化情绪趋势图表
 const initEmotionChart = () => {
   if (!emotionChartRef.value) return
   if (emotionChart) {
+    //销毁旧图表
     emotionChart.dispose()
   }
+  //创建echarts图表实例
   emotionChart = echarts.init(emotionChartRef.value)
   //获取情绪趋势的数据
   const TrendData = aiData.value.emotionTrend
-  //配置项
+  //配置项-情绪趋势分析
   const option = {
     title: {
       text: '情绪趋势分析',
@@ -233,7 +239,9 @@ const initEmotionChart = () => {
 
 //咨询会话统计
 let consultationChart = null
+//咨询会话统计图表引用
 const consultationChartRef = ref(null)
+//初始化咨询会话统计图表
 const initConsultationChart = () => {
   if (!consultationChartRef.value) return
   if (consultationChart) {
@@ -242,6 +250,7 @@ const initConsultationChart = () => {
   consultationChart = echarts.init(consultationChartRef.value)
   //获取数据
   const dailyTrend = aiData.value.consultationStats.dailyTrend
+  //配置项
   const option = {
     title: {
       text: '咨询活动统计',
@@ -351,7 +360,9 @@ const initConsultationChart = () => {
 
 //用户活跃度趋势
 let userActivityChart = null
+//用户活跃度趋势图表引用
 const userActivityChartRef = ref(null)
+//初始化用户活跃度趋势图表
 const initUserActivityChart = () => {
   if (!userActivityChartRef.value) return
   if (userActivityChart) {
@@ -360,7 +371,7 @@ const initUserActivityChart = () => {
   userActivityChart = echarts.init(userActivityChartRef.value)
   //获取数据
   const activityData = aiData.value.userActivity
-
+  //配置项
   const option = {
     title: {
       text: '用户活跃度趋势',
@@ -498,6 +509,7 @@ const initUserActivityChart = () => {
 
 
 onMounted(() => {
+  //从服务器获取数据分析
   getAnalyticsOverview().then(res => {
     aiData.value = res
     console.log(res);

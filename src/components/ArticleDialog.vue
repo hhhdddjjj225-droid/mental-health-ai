@@ -1,4 +1,5 @@
 <template>
+  <!-- 文章弹窗 -->
   <el-dialog :title="isEdit ? '编辑文章' : '新增文章'" v-model="dialogVisible" width="50%" @close="handleClose">
     <el-form :model="formData" :rules="rules" ref="formRef" label-width="120px">
       <el-form-item label="文章标题" prop="title">
@@ -34,10 +35,12 @@
         </div>
       </el-form-item>
       <el-form-item label="文章内容" prop="content">
+        <!-- //富文本编辑器组件 -->
         <RichTextEditor v-model="formData.content" placeholder="请输入文章内容,支持富文本\n\n可以使用加粗、斜体、下划线、列表、标题等格式来丰富文章内容"
           :maxCharCount="5000" @change="handleContentChange" @create="handleEditorCreated" min-height="400px" />
       </el-form-item>
     </el-form>
+    <!--内容预览-->
     <div v-if="btnPreview">
       <h3>内容预览</h3>
       <div v-html="formData.content"></div>
@@ -58,6 +61,7 @@ import { uploadFile, createArticle, updateArticle } from "@/api/admin";
 import { fileBaseUrl } from "@/config/index.js";
 import RichTextEditor from "@/components/RichTextEditor.vue";
 const props = defineProps({
+  //弹窗是否显示参数
   modelValue: {
     type: Boolean,
     default: false,
@@ -66,11 +70,13 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  //文章详情数据
   article: {
     type: Object,
     default: null
   },
 })
+//关闭弹窗逻辑
 const handleClose = () => {
   //重置
   formRef.value.resetFields()
@@ -82,18 +88,23 @@ const handleClose = () => {
   handleRemove()
   emit('update:modelValue', false)
 }
+//接收父组件的success事件
 const emit = defineEmits(['update:modelValue'], 'success')
+//打开和关闭弹窗
 const dialogVisible = computed({
   get: () => props.modelValue,
   set: (val) => {
+    //传回父组件的弹窗是否显示参数
     emit('update:modelValue', val)
   }
 })
+//新增还是编辑
 const isEdit = computed(() => !!props.article?.id)
 //监听编辑数据
 watch(() => props.article, (newVal) => {
   if (newVal) {
     nextTick(() => {
+      //将文章详情数据赋值给表单数据
       Object.assign(formData, newVal)
       //使用现有的id
       businessId.value = newVal.id
@@ -116,7 +127,7 @@ const formData = reactive(
     "id": ""
   }
 )
-
+//表单校验规则
 const rules = reactive({
   title: [
     { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -131,17 +142,19 @@ const rules = reactive({
   ],
 
 })
-
+//标签列表
 const commonTags = [
   '情绪管理', '焦虑', '抑郁', '压力', '睡眠',
   '冥想', '正念', '放松', '心理健康', '自我成长',
   '人际关系', '工作压力', '学习方法', '生活技巧'
 ]
-//上传
+//上传的地址
 const imgUrl = ref('')
+//对上传的文件校验
 const beforeUpload = (file) => {
-  //对上传的文件校验
+  //校验文件是否存在
   const isImage = file.type.startsWith('image/')
+  //校验文件大小是否超过5MB
   const isLt5M = file.size / 1024 / 1024 < 5
   if (!isImage) {
     ElMessage.error('请上传图片文件')
@@ -155,8 +168,11 @@ const beforeUpload = (file) => {
 }
 
 const businessId = ref(null)
+//上传图片到服务器的方法
 const handleUploadRequest = async ({ file }) => {
+  //UUID生成业务id
   businessId.value = crypto.randomUUID()
+  //后端调用结果
   const fileRes = await uploadFile(file, {
     businessId: businessId.value
   })
@@ -176,39 +192,46 @@ const handleContentChange = (data) => {
 }
 
 const sditorInstance = ref(null)
+//富文本逻辑
 const handleEditorCreated = (editor) => {
   sditorInstance.value = editor
   //编辑
   if (formData.content && editor) {
+    //下一个渲染
     nextTick(() => {
       editor.setHtml(formData.content)
     })
   }
 }
-
+//预览按钮
 const btnPreview = ref(false)
 
 //提交
 const formRef = ref()
 const loading = ref(false)
+//提交逻辑
 const handleSubmit = () => {
   formRef.value.validate((valid, fields) => {
+    //是否通过
     if (valid) {
       loading.value = true
     }
     console.log(formData, 'formData')
     const submitData = {
       ...formData,
+      //标签转换为字符串
       tags: formData.tagArray.join(',')
     }
     delete submitData.tagArray
     if (!isEdit.value) {
+      //新增
       submitData.id = businessId.value
       createArticle(submitData).then(res => {
         loading.value = false
         emit('success')
       })
     } else {
+      //编辑
       updateArticle(props.article.id, submitData).then(res => {
         loading.value = false
         emit('success')

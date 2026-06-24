@@ -44,6 +44,7 @@ const backendRoutes = [
      
     ]
   },
+  // 登录注册路由
   {
     path: '/auth',
     component:AuthLayout,
@@ -67,7 +68,7 @@ const backendRoutes = [
 
 ]
 
-
+//用户端路由
 const frontendRoutes = [
   {
     path: '/',
@@ -93,6 +94,7 @@ const frontendRoutes = [
     ]
   }
 ]
+//合并前后台路由
 const router = createRouter({
   history: createWebHistory(),
   routes: [...backendRoutes,...frontendRoutes]

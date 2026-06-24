@@ -1,4 +1,5 @@
 <template>
+  <!-- //情绪日志 -->
   <div>
     <PageHead title="情绪日志" />
     <TableSearch :formItem="formItem" @search="handleSearch" />
@@ -33,6 +34,8 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页组件
+    详情弹窗组件 -->
     <el-pagination style="margin-top: 25px" :page-size="pagination.size" layout="prev, pager, next"
       :total="pagination.total" @change="handleChange" />
     <el-dialog v-model="detailDialogVisible" title="情绪日志详情" width="800px" :close-on-click-modal="false">
@@ -152,14 +155,14 @@ const getAiEmotionTagType = (emotion) => {
   }
   return emotionTagMap[emotion] || 'info'
 }
-
+//情绪强度颜色映射
 const getEmotionScoreColor = (score) => {
   if (score >= 80) return '#f56c6c'
   if (score >= 60) return '#e6a23c'
   if (score >= 40) return '#909399'
   return '#67c23a'
 }
-
+//风险等级颜色映射
 const getRiskLevelTagType = (riskLevel) => {
   const riskTagMap = {
     0: 'success',
@@ -169,7 +172,7 @@ const getRiskLevelTagType = (riskLevel) => {
   }
   return riskTagMap[riskLevel] || 'info'
 }
-
+//风险等级文本映射
 const getRiskLevelText = (riskLevel) => {
   const riskTextMap = {
     0: '正常',
@@ -179,7 +182,7 @@ const getRiskLevelText = (riskLevel) => {
   }
   return riskTextMap[riskLevel] || '未知风险等级'
 }
-
+//表单数据
 const formItem = [
   { comp: 'input', prop: 'userId', label: '用户ID', placeholder: '请输入用户ID' },
   {
@@ -208,6 +211,7 @@ const handleChange = (page) => {
   pagination.currentPage = page;
   handleSearch();
 };
+//获得分页参数和表单元素
 const handleSearch = async (formData) => {
   console.log(formData, "查询参数");
 
@@ -220,10 +224,13 @@ const handleSearch = async (formData) => {
   pagination.total = total;
 };
 
-//详情
+//详情弹窗是否打开
 const detailDialogVisible = ref(false)
+//当前详情
 const currentDetail = ref(null)
+///AI分析数据
 const aiData = ref(null)
+//打开详情弹窗
 const viewSessionDetail = (row) => {
   currentDetail.value = row
 

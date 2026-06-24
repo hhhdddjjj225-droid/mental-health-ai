@@ -1,4 +1,5 @@
 <template>
+  <!--主页布局-->
   <div class="frontend-layout">
     <div class="navbar-container">
       <div class="brand-section">
@@ -35,9 +36,9 @@
 import { ref, onMounted } from 'vue'
 import { logout } from '@/api/admin'
 import router from '@/router'
-
+//引入品牌logo
 const iconUrl = new URL('@/assets/images/机器人.png', import.meta.url).href
-
+//用户登录状态
 const isLoggedIn = ref(false)
 
 //用户登出
@@ -51,6 +52,7 @@ const handleLogout = () => {
 }
 
 onMounted(() => {
+  //检查用户登录状态
   isLoggedIn.value = localStorage.getItem('token') !== null
 })
 </script>

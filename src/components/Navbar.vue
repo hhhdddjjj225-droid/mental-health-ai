@@ -1,8 +1,10 @@
 <template>
   <div class="navbar">
+    <!-- flex布局 -->
     <div class="flex-box">
       <el-button @click="handleCollapse">
         <el-icon>
+          <!-- 切换侧边栏折叠状态 -->
           <Expand />
         </el-icon>
       </el-button>
@@ -36,6 +38,8 @@ import { logout } from '@/api/admin'
 
 const router = useRouter()
 const route = useRoute()
+// 处理下拉菜单命令
+// 退出登录逻辑
 const handleCommand = (command) => {
   console.log('11');
 
@@ -55,6 +59,7 @@ const handleCommand = (command) => {
     })
   }
 }
+//切换侧边栏折叠状态
 const handleCollapse = () => {
   useAdminStore().toggleCollapse()
 }

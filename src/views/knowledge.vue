@@ -1,13 +1,17 @@
 <template>
   <div>
+    <!-- 页面标题 -->
     <PageHead title="知识文章">
       <template #buttons>
         <el-button type="primary" @click="handleEdit({})">新增</el-button>
       </template>
     </PageHead>
+    <!-- 表格搜索 -->
     <TableSearch :formItem="formItem" @search="handleSearch" />
     <el-table :data="tableData" style="width: 100%; margin-top: 25px">
       <el-table-column label="文章标题" width="450" fixed="left">
+        <!-- 插槽 -->
+        <!-- 渲染文章标题 -->
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <el-icon>
@@ -26,6 +30,7 @@
             <span>{{ categoryMap[scope.row.categoryId] }}</span>
           </div>
         </template>
+        <!-- 渲染分类名称 -->
       </el-table-column>
       <el-table-column prop="authorName" label="作者" width="150" />
       <el-table-column prop="readCount" label="阅读量" width="100" />
@@ -43,6 +48,7 @@
     </el-table>
     <el-pagination style="margin-top: 25px" :page-size="pagination.size" layout="prev, pager, next"
       :total="pagination.total" @change="handleChange" />
+    <!-- 文章弹窗 -->
     <ArticleDialog v-model:modelValue="dialogVisible" :article="currentArticle" :categories="categories"
       @success="handleSuccess" />
   </div>
@@ -55,6 +61,7 @@ import TableSearch from "@/components/TableSearch.vue";
 import { categoryTree, articlePage, getArticleDetail, changeArticleStatus, deleteArticle } from "@/api/admin";
 import ArticleDialog from "@/components/ArticleDialog.vue";
 import { ElMessageBox, ElMessage } from "element-plus";
+//传递查询参数给子组件
 const formItem = [
   {
     comp: "input",
@@ -95,6 +102,7 @@ const pagination = reactive({
   size: 10,
   total: 0,
 });
+//查询
 const handleSearch = async (formData) => {
   console.log(formData, "查询参数");
 
@@ -102,11 +110,12 @@ const handleSearch = async (formData) => {
     ...pagination,
     ...formData,
   };
+  //解构获得的列表数据
   const { records, total } = await articlePage(params);
   tableData.value = records;
   pagination.total = total;
 };
-
+//分页按钮操作
 const handleChange = (page) => {
   pagination.currentPage = page;
   handleSearch();
@@ -115,11 +124,13 @@ const handleChange = (page) => {
 const categoryMap = reactive({});
 //分类列表
 const categories = ref([]);
-//列表
+//列表数据
 const tableData = ref([]);
 //新增和编辑
 const dialogVisible = ref(false);
+//当前文章
 const currentArticle = ref(null);
+//新增和编辑成功后，刷新列表
 const handleSuccess = () => {
   dialogVisible.value = false
   handleSearch()
@@ -140,6 +151,7 @@ const handleEdit = (row) => {
 
 //发布和下线
 const handlePublish = (row) => {
+  //弹窗确认
   ElMessageBox.confirm(`确认发布文章${row.title}吗？`,
     '确认', {
     confirmButtonText: '确认发布',
@@ -188,6 +200,7 @@ const handleDelete = (row) => {
 onMounted(async () => {
   const data = await categoryTree();
   categories.value = data.map((item) => {
+    //将分类id映射到分类名称
     categoryMap[item.id] = item.categoryName;
     return {
       label: item.categoryName,

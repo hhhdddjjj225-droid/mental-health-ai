@@ -1,6 +1,8 @@
 <template>
   <el-form ref="ruleformRef" :model="formData">
     <el-row :gutter="24">
+      <!-- 循环渲染表单项 -->
+      <!-- 每个表单项根据组件类型渲染不同的组件 -->
       <template v-for="item in formItemAttrs" :key="item.prop">
         <el-col v-bind="item.col">
           <el-form-item :label="item.label" :prop="item.prop">
@@ -23,6 +25,7 @@
 </template>
 <script setup>
 import { ref, reactive, computed } from 'vue'
+// 解析父组件传递的formItem属性，添加默认值
 const props = defineProps({
   formItem: {
     type: Array,
@@ -30,6 +33,8 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['search'])
+// 计算属性，根据formItem属性添加默认值
+// 为每个表单项添加默认值，包括列宽、占位符、选项等
 const formItemAttrs = computed(() => {
   const { formItem } = props
   formItem.forEach(item => {
@@ -52,10 +57,12 @@ const isComp = (comp) => {
     select: 'elSelect'
   }[comp]
 }
+// 查询
 const handleSearch = () => {
   //console.log(formData)
   emit('search', formData)
 }
+// 重置表单
 const handleReset = (formEl) => {
   if (!formEl) return
   formEl.resetFields()

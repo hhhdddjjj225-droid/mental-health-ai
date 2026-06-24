@@ -12,6 +12,7 @@
         <p>请输入您的登录信息</p>
       </div>
     </div>
+    <!-- 登录表单 -->
     <div class="form-container">
       <el-form ref='ruleFormRef' :model="formData" :rules="rules" label-position="top">
         <el-form-item label="用户名或邮箱" prop="username">
@@ -32,11 +33,13 @@
 import { ref, reactive } from 'vue'
 import { login } from '@/api/admin'
 import { useRouter } from 'vue-router'
+//登录表单数据
 const ruleFormRef = ref()
 const formData = reactive({
   username: '',
   password: ''
 })
+//登录表单校验规则
 const rules = reactive({
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' }

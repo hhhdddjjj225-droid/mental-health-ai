@@ -1,4 +1,5 @@
 <template>
+  <!-- 注册页面 -->
   <div class="container">
     <div class="title">
       <div class="title-text">
@@ -6,6 +7,7 @@
         <p>请填写注册信息</p>
       </div>
     </div>
+    <!-- 注册表单 -->
     <div class="form-container">
       <el-form label-position="top" :model="formData" :rules="rules" ref="submitFormRef" label-width="120px">
         <el-form-item label="用户名或邮箱" prop="username">
@@ -39,7 +41,9 @@ import { ref, reactive } from 'vue'
 import { register } from '@/api/frontend'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
+//注册表单数据
 const formData = reactive({
 
   "username": "",
@@ -52,6 +56,7 @@ const formData = reactive({
   "userType": 1//1是普通用户
 
 })
+//注册表单校验规则
 const rules = reactive({
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' }
@@ -70,9 +75,11 @@ const rules = reactive({
 
 //表单提交
 const submitFormRef = ref(null)
+//点击注册按钮
 const submitForm = async (formEl) => {
   if (!formEl) return
   formEl.validate(async (valid) => {
+    //上传注册信息，后端处理数据
     register(formData).then(({ data }) => {
       if (!data) {
         ElMessage.error('注册成功')
