@@ -1,4 +1,5 @@
 <template>
+  <!-- 心理健康知识库 -->
   <div class="knowledge-container">
     <div class="header-section">
       <div class="header-content">
@@ -99,7 +100,7 @@ const getPageList = () => {
 const getImage = (url) => {
   return url ? 'http://159.75.169.224:1235' + url : 'https://file.itndedu.com/psychology_ai.png'
 }
-
+//分页
 const handleChange = (page) => {
   pagination.currentPage = page;
   getPageList();
@@ -116,6 +117,7 @@ onMounted(() => {
     currentPage: 1,
     size: 5,
   }
+  //获取阅读推荐列表
   getPageList()
   getKnowledgeList(params).then(res => {
     console.log(res)

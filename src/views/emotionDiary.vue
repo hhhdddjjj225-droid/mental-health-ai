@@ -1,4 +1,5 @@
 <template>
+  <!-- 情感日记 -->
   <div class="emotionDiary-container">
     <div class="header-section">
       <div class="header-content">
@@ -92,10 +93,11 @@ const emotionOptions = [
   { name: '惊讶', url: new URL('@/assets/images/惊讶.png', import.meta.url).href },
   { name: '困惑', url: new URL('@/assets/images/困惑.png', import.meta.url).href },
 ]
-
+//选择情绪
 const selectEmotion = (emotion) => {
   diaryForm.dominantEmotion = emotion
 }
+//记录表单
 const diaryForm = reactive({
   diaryDate: dayjs().format('YYYY-MM-DD'),
   moodScore: null,
@@ -105,7 +107,7 @@ const diaryForm = reactive({
   sleepQuality: null,
   stressLevel: null
 })
-
+//重置表单
 const resetForm = () => {
   Object.assign(diaryForm, {
     diaryDate: dayjs().format('YYYY-MM-DD'),
@@ -118,6 +120,7 @@ const resetForm = () => {
   }
   )
 }
+//提交记录
 const submit = () => {
   console.log(diaryForm)
   if (!diaryForm.moodScore) {

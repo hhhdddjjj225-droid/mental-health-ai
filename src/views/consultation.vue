@@ -356,7 +356,7 @@ const startAIResponse = (sessionId, userMessage) => {
     return
   }
   isAiTying.value = true
-
+  //添加初始AI消息
   const aiMessage = {
     id: `ai_${Date.now()}${Math.random().toString(36).substr(2, 9)}`,
     senderType: 2,
@@ -455,15 +455,12 @@ const handleSessionClick = (session) => {
   }
   currentSession.value = sessionData
 }
-
+//删除会话
 const handleDeleteSession = (sessionId) => {
   deleteSession(sessionId).then(res => {
 
     ElMessage.success('删除成功')
     getSessionPage()
-
-
-
   })
 }
 
